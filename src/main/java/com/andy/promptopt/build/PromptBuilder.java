@@ -1,4 +1,8 @@
-package com.andy.promptopt;
+package com.andy.promptopt.build;
+
+import com.andy.promptopt.model.Domain;
+import com.andy.promptopt.model.TaskType;
+import com.andy.promptopt.analyze.AnalysisResult;
 
 public class PromptBuilder {
     public String buildPrompt(AnalysisResult result) {

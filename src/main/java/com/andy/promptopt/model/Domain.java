@@ -1,4 +1,4 @@
-package com.andy.promptopt;
+package com.andy.promptopt.model;
 
 public enum Domain {
     LINEAR_ALGEBRA,

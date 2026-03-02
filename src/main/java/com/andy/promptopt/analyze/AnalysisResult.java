@@ -1,4 +1,7 @@
-package com.andy.promptopt;
+package com.andy.promptopt.analyze;
+
+import com.andy.promptopt.model.Domain;
+import com.andy.promptopt.model.TaskType;
 
 import java.util.List;
 import java.util.Map;

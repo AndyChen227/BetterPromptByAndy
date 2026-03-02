@@ -1,5 +1,9 @@
 package com.andy.promptopt;
 
+import com.andy.promptopt.analyze.AnalysisResult;
+import com.andy.promptopt.analyze.PromptAnalyzer;
+import com.andy.promptopt.model.Domain;
+import com.andy.promptopt.model.TaskType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

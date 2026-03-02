@@ -1,5 +1,6 @@
 package com.andy.promptopt;
 
+import com.andy.promptopt.app.Main;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;

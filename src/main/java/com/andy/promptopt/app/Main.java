@@ -1,4 +1,8 @@
-package com.andy.promptopt;
+package com.andy.promptopt.app;
+
+import com.andy.promptopt.analyze.AnalysisResult;
+import com.andy.promptopt.analyze.PromptAnalyzer;
+import com.andy.promptopt.build.PromptBuilder;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.

@@ -1,4 +1,7 @@
-package com.andy.promptopt;
+package com.andy.promptopt.analyze;
+
+import com.andy.promptopt.model.Domain;
+import com.andy.promptopt.model.TaskType;
 
 public class PromptAnalyzer {
     public AnalysisResult analyze(String input) {
