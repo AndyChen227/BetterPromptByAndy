@@ -3,6 +3,11 @@ package com.andy.promptopt.app;
 import com.andy.promptopt.analyze.AnalysisResult;
 import com.andy.promptopt.analyze.PromptAnalyzer;
 import com.andy.promptopt.build.PromptBuilder;
+import com.andy.promptopt.rule.ClarifyQuestionsRule;
+import com.andy.promptopt.rule.PipelineResult;
+import com.andy.promptopt.rule.RulePipeline;
+
+import java.util.List;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -39,8 +44,22 @@ public class Main {
         PromptAnalyzer analyzer = new PromptAnalyzer();
         PromptBuilder builder = new PromptBuilder();
         AnalysisResult result = analyzer.analyze(input);
+        String builtPrompt = builder.buildPrompt(result);
+        RulePipeline pipeline = new RulePipeline(List.of(new ClarifyQuestionsRule()));
+        PipelineResult pipelineResult = pipeline.run(input, builtPrompt, result);
+
         System.out.printf("Domain: %s (confidence %.2f)%n", result.domain(), result.domainConfidence());
-        System.out.print(builder.buildPrompt(result));
+        System.out.print(pipelineResult.output());
+        if (!pipelineResult.appliedRules().isEmpty()) {
+            System.out.print("\n--------------------------------\n");
+            System.out.print("Applied Rules:\n");
+            for (var appliedRule : pipelineResult.appliedRules()) {
+                System.out.printf(" - %s: %s | %s%n",
+                        appliedRule.id(),
+                        appliedRule.name(),
+                        appliedRule.reason());
+            }
+        }
     }
 
     private static void runRepl() {
