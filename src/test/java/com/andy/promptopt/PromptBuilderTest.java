@@ -7,6 +7,7 @@ import com.andy.promptopt.model.TaskType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PromptBuilderTest {
@@ -28,10 +29,10 @@ class PromptBuilderTest {
         String markdown = builder.buildPrompt(result);
         assertTrue(markdown.contains("## Context"));
         assertTrue(markdown.contains("## Task"));
-        assertTrue(markdown.contains("## Constraints"));
-        assertTrue(markdown.contains("## Output Format"));
+        assertFalse(markdown.contains("## Constraints"));
+        assertFalse(markdown.contains("## Output Format"));
 
         long headingCount = markdown.lines().filter(line -> line.startsWith("## ")).count();
-        assertEquals(4, headingCount);
+        assertEquals(2, headingCount);
     }
 }

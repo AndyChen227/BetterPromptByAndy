@@ -1,8 +1,8 @@
 package com.andy.promptopt.build;
 
+import com.andy.promptopt.analyze.AnalysisResult;
 import com.andy.promptopt.model.Domain;
 import com.andy.promptopt.model.TaskType;
-import com.andy.promptopt.analyze.AnalysisResult;
 
 public class PromptBuilder {
     public String buildPrompt(AnalysisResult result) {
@@ -24,18 +24,7 @@ public class PromptBuilder {
         sb.append("\n");
 
         sb.append("## Task\n");
-        sb.append(taskSentence(safe)).append("\n\n");
-
-        sb.append("## Constraints\n");
-        for (String bullet : constraintBullets(safe)) {
-            sb.append("- ").append(bullet).append("\n");
-        }
-        sb.append("\n");
-
-        sb.append("## Output Format\n");
-        for (String bullet : outputFormatBullets(safe)) {
-            sb.append("- ").append(bullet).append("\n");
-        }
+        sb.append(taskSentence(safe)).append("\n");
 
         return sb.toString();
     }
@@ -65,53 +54,4 @@ public class PromptBuilder {
         };
     }
 
-    private java.util.List<String> constraintBullets(AnalysisResult result) {
-        java.util.List<String> bullets = new java.util.ArrayList<>();
-        Domain domain = result.domain();
-        switch (domain) {
-            case LINEAR_ALGEBRA -> {
-                bullets.add("Provide step-by-step reasoning.");
-                bullets.add("Define key terms before using them.");
-                bullets.add("Include a small example to illustrate the idea.");
-                bullets.add("Mention basis or dimension when relevant.");
-            }
-            case PHYSICS -> {
-                bullets.add("State any assumptions explicitly.");
-                bullets.add("Use correct units and symbols.");
-                bullets.add("Explain the physical meaning of each step.");
-                bullets.add("Show steps in a logical sequence.");
-            }
-            case CODING -> {
-                bullets.add("Provide correct, runnable code.");
-                bullets.add("Explain the logic briefly.");
-                bullets.add("Mention edge cases to consider.");
-                bullets.add("Include tests or example usage.");
-            }
-            case WRITING -> {
-                bullets.add("Maintain a clear structure.");
-                bullets.add("Use an appropriate tone.");
-                bullets.add("Prioritize clarity and concision.");
-                bullets.add("Include an outline if it helps.");
-            }
-            case GENERAL -> {
-                bullets.add("Be clear and concise.");
-                bullets.add("Ask clarifying questions if needed.");
-                bullets.add("Stay focused on the user request.");
-            }
-        }
-        if (bullets.size() > 6) {
-            return bullets.subList(0, 6);
-        }
-        return bullets;
-    }
-
-    private java.util.List<String> outputFormatBullets(AnalysisResult result) {
-        java.util.List<String> bullets = new java.util.ArrayList<>();
-        bullets.add("Use Markdown with bullet points.");
-        if (result.domain() == Domain.CODING) {
-            bullets.add("Use fenced code blocks for any code.");
-        }
-        bullets.add("Keep sections separated and labeled.");
-        return bullets;
-    }
 }

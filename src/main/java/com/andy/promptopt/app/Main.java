@@ -4,6 +4,8 @@ import com.andy.promptopt.analyze.AnalysisResult;
 import com.andy.promptopt.analyze.PromptAnalyzer;
 import com.andy.promptopt.build.PromptBuilder;
 import com.andy.promptopt.rule.ClarifyQuestionsRule;
+import com.andy.promptopt.rule.ConstraintsRule;
+import com.andy.promptopt.rule.OutputFormatRule;
 import com.andy.promptopt.rule.PipelineResult;
 import com.andy.promptopt.rule.RulePipeline;
 
@@ -45,7 +47,11 @@ public class Main {
         PromptBuilder builder = new PromptBuilder();
         AnalysisResult result = analyzer.analyze(input);
         String builtPrompt = builder.buildPrompt(result);
-        RulePipeline pipeline = new RulePipeline(List.of(new ClarifyQuestionsRule()));
+        RulePipeline pipeline = new RulePipeline(List.of(
+                new ClarifyQuestionsRule(),
+                new ConstraintsRule(),
+                new OutputFormatRule()
+        ));
         PipelineResult pipelineResult = pipeline.run(input, builtPrompt, result);
 
         System.out.printf("Domain: %s (confidence %.2f)%n", result.domain(), result.domainConfidence());

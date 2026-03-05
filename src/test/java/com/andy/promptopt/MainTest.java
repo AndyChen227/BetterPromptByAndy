@@ -19,7 +19,7 @@ class MainTest {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         System.setOut(new PrintStream(buffer));
         try {
-            Main.main(new String[]{"--in", "Test input"});
+            Main.main(new String[]{"--in", "Please debug this Java NullPointerException in my hashmap code"});
         } finally {
             System.setOut(originalOut);
             System.setIn(originalIn);
@@ -30,6 +30,8 @@ class MainTest {
         assertTrue(output.contains("## Task"));
         assertTrue(output.contains("## Constraints"));
         assertTrue(output.contains("## Output Format"));
+        assertTrue(output.contains("R_CONSTRAINTS"));
+        assertTrue(output.contains("R_OUTPUT_FORMAT"));
         assertFalse(output.contains("PromptOpt M2.1"));
         assertFalse(output.contains("Analyzing..."));
         assertFalse(output.contains("Ready for next question."));
