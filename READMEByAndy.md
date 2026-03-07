@@ -116,7 +116,7 @@ Key Features
   
   Rule-Based Prompt Optimization
   
-  PromptOpt uses a modular rule engine to dynamically enhance prompts.
+  PromptOpt uses a modular rule engine to enhance prompts dynamically.
   
   Rules are applied through a pipeline based on analysis results.
   
