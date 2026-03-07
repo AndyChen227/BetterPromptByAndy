@@ -47,7 +47,6 @@ public class ConstraintsRule implements Rule {
             case LINEAR_ALGEBRA -> {
                 bullets.add("Provide step-by-step reasoning.");
                 bullets.add("Define key terms before using them.");
-                bullets.add("Include a small example to illustrate the idea.");
                 bullets.add("Mention basis or dimension when relevant.");
             }
             case PHYSICS -> {
@@ -60,7 +59,6 @@ public class ConstraintsRule implements Rule {
                 bullets.add("Provide correct, runnable code.");
                 bullets.add("Explain the logic briefly.");
                 bullets.add("Mention edge cases to consider.");
-                bullets.add("Include tests or example usage.");
             }
             case WRITING -> {
                 bullets.add("Maintain a clear structure.");

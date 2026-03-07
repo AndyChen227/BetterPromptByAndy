@@ -5,6 +5,7 @@ import com.andy.promptopt.analyze.PromptAnalyzer;
 import com.andy.promptopt.build.PromptBuilder;
 import com.andy.promptopt.rule.ClarifyQuestionsRule;
 import com.andy.promptopt.rule.ConstraintsRule;
+import com.andy.promptopt.rule.ExamplesRule;
 import com.andy.promptopt.rule.OutputFormatRule;
 import com.andy.promptopt.rule.PipelineResult;
 import com.andy.promptopt.rule.RulePipeline;
@@ -50,7 +51,8 @@ public class Main {
         RulePipeline pipeline = new RulePipeline(List.of(
                 new ClarifyQuestionsRule(),
                 new ConstraintsRule(),
-                new OutputFormatRule()
+                new OutputFormatRule(),
+                new ExamplesRule()
         ));
         PipelineResult pipelineResult = pipeline.run(input, builtPrompt, result);
 
