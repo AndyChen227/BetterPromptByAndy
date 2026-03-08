@@ -45,15 +45,12 @@ public class ConstraintsRule implements Rule {
         Domain domain = result.domain();
         switch (domain) {
             case LINEAR_ALGEBRA -> {
-                bullets.add("Provide step-by-step reasoning.");
                 bullets.add("Define key terms before using them.");
                 bullets.add("Mention basis or dimension when relevant.");
             }
             case PHYSICS -> {
                 bullets.add("State any assumptions explicitly.");
                 bullets.add("Use correct units and symbols.");
-                bullets.add("Explain the physical meaning of each step.");
-                bullets.add("Show steps in a logical sequence.");
             }
             case CODING -> {
                 bullets.add("Provide correct, runnable code.");

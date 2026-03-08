@@ -9,6 +9,7 @@ import com.andy.promptopt.rule.ExamplesRule;
 import com.andy.promptopt.rule.OutputFormatRule;
 import com.andy.promptopt.rule.PipelineResult;
 import com.andy.promptopt.rule.RulePipeline;
+import com.andy.promptopt.rule.StepByStepRule;
 
 import java.util.List;
 
@@ -52,7 +53,8 @@ public class Main {
                 new ClarifyQuestionsRule(),
                 new ConstraintsRule(),
                 new OutputFormatRule(),
-                new ExamplesRule()
+                new ExamplesRule(),
+                new StepByStepRule()
         ));
         PipelineResult pipelineResult = pipeline.run(input, builtPrompt, result);
 
