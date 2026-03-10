@@ -3,12 +3,17 @@ package com.andy.promptopt.app;
 import com.andy.promptopt.analyze.AnalysisResult;
 import com.andy.promptopt.analyze.PromptAnalyzer;
 import com.andy.promptopt.build.PromptBuilder;
+import com.andy.promptopt.evaluator.EvaluationResult;
+import com.andy.promptopt.evaluator.PromptEvaluator;
 import com.andy.promptopt.rule.ClarifyQuestionsRule;
 import com.andy.promptopt.rule.ConstraintsRule;
+import com.andy.promptopt.rule.AssumptionControlRule;
 import com.andy.promptopt.rule.ExamplesRule;
 import com.andy.promptopt.rule.OutputFormatRule;
+import com.andy.promptopt.rule.AppliedRule;
 import com.andy.promptopt.rule.PipelineResult;
 import com.andy.promptopt.rule.RulePipeline;
+import com.andy.promptopt.rule.ScopeControlRule;
 import com.andy.promptopt.rule.StepByStepRule;
 
 import java.util.List;
@@ -44,32 +49,40 @@ public class Main {
         return null;
     }
 
-    private static void runOnce(String input) {
+    private static void runOnce(String rawInput) {
         PromptAnalyzer analyzer = new PromptAnalyzer();
         PromptBuilder builder = new PromptBuilder();
-        AnalysisResult result = analyzer.analyze(input);
-        String builtPrompt = builder.buildPrompt(result);
+        AnalysisResult analysis = analyzer.analyze(rawInput);
+        String builtPrompt = builder.buildPrompt(analysis);
         RulePipeline pipeline = new RulePipeline(List.of(
                 new ClarifyQuestionsRule(),
                 new ConstraintsRule(),
                 new OutputFormatRule(),
                 new ExamplesRule(),
-                new StepByStepRule()
+                new StepByStepRule(),
+                new AssumptionControlRule(),
+                new ScopeControlRule()
         ));
-        PipelineResult pipelineResult = pipeline.run(input, builtPrompt, result);
+        PipelineResult pipelineResult = pipeline.run(rawInput, builtPrompt, analysis);
+        String optimizedPrompt = pipelineResult.output();
+        List<AppliedRule> appliedRules = pipelineResult.appliedRules();
+        PromptEvaluator evaluator = new PromptEvaluator();
+        EvaluationResult evaluationResult = evaluator.evaluate(rawInput, optimizedPrompt, appliedRules, analysis);
 
-        System.out.printf("Domain: %s (confidence %.2f)%n", result.domain(), result.domainConfidence());
-        System.out.print(pipelineResult.output());
-        if (!pipelineResult.appliedRules().isEmpty()) {
+        System.out.printf("Domain: %s (confidence %.2f)%n", analysis.domain(), analysis.domainConfidence());
+        System.out.print(optimizedPrompt);
+        if (!appliedRules.isEmpty()) {
             System.out.print("\n--------------------------------\n");
             System.out.print("Applied Rules:\n");
-            for (var appliedRule : pipelineResult.appliedRules()) {
+            for (var appliedRule : appliedRules) {
                 System.out.printf(" - %s: %s | %s%n",
                         appliedRule.id(),
                         appliedRule.name(),
                         appliedRule.reason());
             }
         }
+        System.out.print("\n--------------------------------\n");
+        System.out.print(evaluationResult.toPrettyString());
     }
 
     private static void runRepl() {
