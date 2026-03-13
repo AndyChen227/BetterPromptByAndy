@@ -1,7 +1,7 @@
 package com.andy.promptopt.rule;
 
 import com.andy.promptopt.analyze.AnalysisResult;
-import com.andy.promptopt.model.Domain;
+import com.andy.promptopt.model.Intent;
 
 import java.util.Locale;
 
@@ -18,8 +18,11 @@ public class StepByStepRule implements Rule {
 
     @Override
     public boolean matches(String rawInput, AnalysisResult analysis) {
-        Domain domain = analysis.domain();
-        return domain == Domain.LINEAR_ALGEBRA || domain == Domain.PHYSICS;
+        return switch (analysis.taskType()) {
+            case PLAN, PROVE, SOLVE -> true;
+            case DEBUG -> analysis.intent() == Intent.TROUBLESHOOTING;
+            case EXPLAIN, SUMMARIZE, GENERAL -> false;
+        };
     }
 
     @Override
@@ -49,7 +52,9 @@ public class StepByStepRule implements Rule {
                 sb.append("- Do not skip important calculation steps.\n");
             }
             default -> {
-                return new RuleResult(builtPrompt, "Reasoning guidance not added because domain is not supported.");
+                sb.append("- Break the response into clear steps.\n");
+                sb.append("- Explain the reasoning in a logical order.\n");
+                sb.append("- Do not skip important intermediate steps.\n");
             }
         }
 

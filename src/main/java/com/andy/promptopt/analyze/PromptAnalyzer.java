@@ -1,6 +1,7 @@
 package com.andy.promptopt.analyze;
 
 import com.andy.promptopt.model.Domain;
+import com.andy.promptopt.model.Intent;
 import com.andy.promptopt.model.TaskType;
 
 public class PromptAnalyzer {
@@ -34,6 +35,8 @@ public class PromptAnalyzer {
                 domainConfidence,
                 taskType,
                 taskConfidence,
+                Intent.GENERAL,
+                0.0,
                 keywords,
                 domainScores,
                 taskScores

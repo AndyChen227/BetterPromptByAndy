@@ -2,6 +2,7 @@ package com.andy.promptopt.rule;
 
 import com.andy.promptopt.analyze.AnalysisResult;
 import com.andy.promptopt.model.Domain;
+import com.andy.promptopt.model.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,11 @@ public class ConstraintsRule implements Rule {
 
     @Override
     public boolean matches(String rawInput, AnalysisResult analysis) {
-        return true;
+        return switch (analysis.taskType()) {
+            case SOLVE -> analysis.intent() == Intent.IMPLEMENTATION;
+            case PLAN -> analysis.intent() == Intent.ACTION_PLAN;
+            default -> false;
+        };
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.andy.promptopt.rule;
 
 import com.andy.promptopt.analyze.AnalysisResult;
+import com.andy.promptopt.model.Intent;
 
 import java.util.Locale;
 
@@ -35,7 +36,17 @@ public class ClarifyQuestionsRule implements Rule {
     @Override
     public boolean matches(String rawInput, AnalysisResult analysis) {
         String trimmed = rawInput == null ? "" : rawInput.trim();
-        if (trimmed.length() < 25) {
+        return switch (analysis.taskType()) {
+            case DEBUG -> analysis.intent() == Intent.TROUBLESHOOTING;
+            case PLAN -> analysis.intent() == Intent.ACTION_PLAN;
+            case GENERAL -> true;
+            case SOLVE -> analysis.intent() == Intent.IMPLEMENTATION && isUnderspecified(trimmed, analysis.wordCount());
+            case EXPLAIN, SUMMARIZE, PROVE -> false;
+        };
+    }
+
+    private boolean isUnderspecified(String trimmed, int wordCount) {
+        if (trimmed.length() < 25 || wordCount <= 4) {
             return true;
         }
 

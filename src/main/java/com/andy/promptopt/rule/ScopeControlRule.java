@@ -1,7 +1,7 @@
 package com.andy.promptopt.rule;
 
 import com.andy.promptopt.analyze.AnalysisResult;
-import com.andy.promptopt.model.Domain;
+import com.andy.promptopt.model.Intent;
 
 public class ScopeControlRule implements Rule {
     @Override
@@ -16,10 +16,13 @@ public class ScopeControlRule implements Rule {
 
     @Override
     public boolean matches(String rawInput, AnalysisResult analysis) {
-        Domain domain = analysis.domain();
-        return domain == Domain.GENERAL
-                || domain == Domain.WRITING
-                || domain == Domain.CODING;
+        return switch (analysis.taskType()) {
+            case EXPLAIN -> analysis.intent() == Intent.CONCEPT || analysis.intent() == Intent.COMPARISON;
+            case DEBUG -> analysis.intent() == Intent.TROUBLESHOOTING;
+            case PLAN -> analysis.intent() == Intent.LEARNING || analysis.intent() == Intent.ACTION_PLAN;
+            case SUMMARIZE -> analysis.intent() == Intent.SUMMARY;
+            case SOLVE, PROVE, GENERAL -> false;
+        };
     }
 
     @Override
@@ -34,21 +37,9 @@ public class ScopeControlRule implements Rule {
         }
 
         sb.append("\n## Scope Control\n");
-        switch (analysis.domain()) {
-            case GENERAL, WRITING -> {
-                sb.append("- Focus on the user's direct question.\n");
-                sb.append("- Do not introduce unrelated subtopics unless necessary.\n");
-                sb.append("- Keep the explanation within the scope of the request.\n");
-            }
-            case CODING -> {
-                sb.append("- Focus on solving the specific programming task requested.\n");
-                sb.append("- Avoid introducing unrelated frameworks or advanced topics unless necessary.\n");
-                sb.append("- Keep the answer aligned with the user's stated problem.\n");
-            }
-            default -> {
-                return new RuleResult(builtPrompt, "Scope guidance not added because domain is not supported.");
-            }
-        }
+        sb.append("- Focus on the user's requested topic.\n");
+        sb.append("- Avoid unrelated details or side topics.\n");
+        sb.append("- Keep the response aligned with the stated goal.\n");
 
         return new RuleResult(sb.toString(), "Scope control guidance added.");
     }

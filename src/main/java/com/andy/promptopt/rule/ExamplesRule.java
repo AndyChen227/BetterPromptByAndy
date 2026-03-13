@@ -2,6 +2,7 @@ package com.andy.promptopt.rule;
 
 import com.andy.promptopt.analyze.AnalysisResult;
 import com.andy.promptopt.model.Domain;
+import com.andy.promptopt.model.Intent;
 
 public class ExamplesRule implements Rule {
     @Override
@@ -16,10 +17,12 @@ public class ExamplesRule implements Rule {
 
     @Override
     public boolean matches(String rawInput, AnalysisResult analysis) {
-        Domain domain = analysis.domain();
-        return domain == Domain.CODING
-                || domain == Domain.LINEAR_ALGEBRA
-                || domain == Domain.PHYSICS;
+        return switch (analysis.taskType()) {
+            case EXPLAIN -> analysis.intent() == Intent.CONCEPT || analysis.intent() == Intent.COMPARISON;
+            case PLAN -> analysis.intent() == Intent.LEARNING;
+            case SOLVE -> analysis.intent() == Intent.IMPLEMENTATION;
+            case DEBUG, SUMMARIZE, PROVE, GENERAL -> false;
+        };
     }
 
     @Override
@@ -36,11 +39,10 @@ public class ExamplesRule implements Rule {
         sb.append("\n## Examples\n");
         switch (analysis.domain()) {
             case CODING -> sb.append("- Include a short code example demonstrating usage.\n");
-            case LINEAR_ALGEBRA -> sb.append("- Include a small numerical example illustrating the concept.\n");
-            case PHYSICS -> sb.append("- Include a worked example with numbers and units.\n");
-            default -> {
-                return new RuleResult(builtPrompt, "Examples not added because domain is not supported.");
-            }
+            case LINEAR_ALGEBRA -> sb.append("- Include a small numeric example to illustrate the idea.\n");
+            case PHYSICS -> sb.append("- Include a simple physical example or application.\n");
+            case WRITING -> sb.append("- Include a brief example to illustrate the point.\n");
+            case GENERAL -> sb.append("- Include a simple example to make the answer more concrete.\n");
         }
 
         return new RuleResult(sb.toString(), "Examples section added for domain-specific guidance.");
